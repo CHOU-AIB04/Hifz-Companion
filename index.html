@@ -3217,8 +3217,19 @@ select.auth-input { cursor:pointer; }
       </div>
     </div>
 
+    <!-- Sticky Ayah Progress Bar -->
+    <div id="ayah-progress-bar" style="display:none;position:sticky;top:0;z-index:10;background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:8px 14px;margin-top:12px;margin-bottom:4px;align-items:center;gap:10px;">
+      <span id="ayah-progress-label" style="font-size:12px;font-weight:700;color:var(--gold-500);white-space:nowrap;min-width:80px;">Ayah 1 / —</span>
+      <div style="flex:1;height:4px;border-radius:2px;background:var(--bg-tertiary);overflow:hidden;"><div id="ayah-progress-fill" style="height:100%;border-radius:2px;background:linear-gradient(90deg,var(--forest-500),var(--gold-400));width:0%;transition:width 0.4s ease;"></div></div>
+      <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+        <label style="font-size:10px;color:var(--text-tertiary);">Go:</label>
+        <input type="number" id="ayah-jump-input" min="1" value="1" style="width:46px;padding:3px 6px;border:1px solid var(--border-light);border-radius:var(--radius-sm);background:var(--bg-secondary);color:var(--text-primary);font-size:12px;font-weight:600;text-align:center;font-family:inherit;outline:none;" onkeydown="if(event.key==='Enter')jumpToAyah()">
+        <button onclick="jumpToAyah()" style="padding:3px 8px;border-radius:var(--radius-sm);border:1px solid var(--border-light);background:var(--bg-tertiary);color:var(--text-secondary);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">→</button>
+      </div>
+    </div>
+
     <!-- Stacked Ayah Scroll View -->
-    <div id="ayah-scroll-container" class="animate-in" style="margin-top: 20px;"></div>
+    <div id="ayah-scroll-container" class="animate-in" style="margin-top: 4px;"></div>
 
     <!-- Write Mode Overlay (hidden) -->
     <div id="write-mode" style="display:none;margin-top:20px;">
@@ -3264,41 +3275,31 @@ select.auth-input { cursor:pointer; }
       </div>
     </div>
 
-    <!-- Memorization Tools Bar — sticky above audio player -->
-    <div class="memorize-tools animate-in" id="memo-tools" style="flex-wrap:wrap;">
-      <div class="memo-tool" id="tool-listen" onclick="memoTools.listen()">
-        <div class="memo-tool-icon" style="background:var(--bg-success);color:var(--forest-500);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"></path></svg>
-        </div>
-        <span class="memo-tool-label" data-i18n="tool_listen">Listen</span>
-        <span class="memo-tool-desc" data-i18n="tool_listen_desc">Play recitation</span>
+    <!-- Memorization Tools — numbered sequential steps -->
+    <div class="memorize-tools animate-in" id="memo-tools" style="flex-direction:column;gap:6px;">
+      <div class="memo-step-tool" id="tool-listen" onclick="memoTools.listen()">
+        <div class="memo-step-num" style="background:var(--bg-success);color:var(--forest-500);">1</div>
+        <div class="memo-step-icon" style="color:var(--forest-500);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"></path></svg></div>
+        <div class="memo-step-text"><span class="memo-step-label" data-i18n="tool_listen">Listen</span><span class="memo-step-desc">Play the full recitation · absorb rhythm</span></div>
       </div>
-      <div class="memo-tool" id="tool-repeat" onclick="memoTools.repeat()">
-        <div class="memo-tool-icon" style="background:var(--bg-accent);color:var(--gold-600);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 102.13-9.36L1 10"></path></svg>
-        </div>
-        <span class="memo-tool-label" data-i18n="tool_repeat">Repeat</span>
-        <span class="memo-tool-desc" data-i18n="tool_repeat_desc">Loop ayah 3x</span>
+      <div class="memo-step-tool" id="tool-repeat" onclick="memoTools.repeat()">
+        <div class="memo-step-num" style="background:var(--bg-accent);color:var(--gold-600);">2</div>
+        <div class="memo-step-icon" style="color:var(--gold-600);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 102.13-9.36L1 10"></path></svg></div>
+        <div class="memo-step-text"><span class="memo-step-label" data-i18n="tool_repeat">Repeat</span><span class="memo-step-desc">Loop each ayah 3× until it feels natural</span></div>
       </div>
-      <div class="memo-tool" id="tool-hide" onclick="memoTools.hideWords()">
-        <div class="memo-tool-icon" style="background:rgba(139,92,246,0.08);color:#8b5cf6;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-        </div>
-        <span class="memo-tool-label" data-i18n="tool_hide">Hide Words</span>
-        <span class="memo-tool-desc" data-i18n="tool_hide_desc">Tap to reveal</span>
+      <div class="memo-step-tool" id="tool-hide" onclick="memoTools.hideWords()">
+        <div class="memo-step-num" style="background:rgba(139,92,246,0.1);color:#8b5cf6;">3</div>
+        <div class="memo-step-icon" style="color:#8b5cf6;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></div>
+        <div class="memo-step-text"><span class="memo-step-label" data-i18n="tool_hide">Hide &amp; Recall</span><span class="memo-step-desc">Cover the text · tap each word to reveal</span></div>
       </div>
-      <div class="memo-tool" id="tool-tafsir" onclick="memoTools.tafsir()">
-        <div class="memo-tool-icon" style="background:rgba(201,168,76,0.1);color:var(--gold-600);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"></path><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"></path></svg>
-        </div>
-        <span class="memo-tool-label" data-i18n="tool_tafsir">Tafsir</span>
-        <span class="memo-tool-desc" data-i18n="tool_tafsir_desc">Show commentary</span>
+      <div class="memo-step-tool" id="tool-tafsir" onclick="memoTools.tafsir()" style="opacity:0.75;">
+        <div class="memo-step-num" style="background:rgba(201,168,76,0.1);color:var(--gold-600);">4</div>
+        <div class="memo-step-icon" style="color:var(--gold-600);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"></path><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"></path></svg></div>
+        <div class="memo-step-text"><span class="memo-step-label" data-i18n="tool_tafsir">Tafsir</span> <span style="font-size:10px;opacity:0.6;">optional</span><span class="memo-step-desc">Read meaning to strengthen understanding</span></div>
       </div>
-      <!-- Mark Surah as Memorized — full-width row below the 4 tools -->
-      <button class="mark-surah-btn" id="mark-surah-btn" onclick="markSurahMemorized(this)" style="grid-column:1/-1;margin-top:4px;">
+      <button class="mark-surah-btn" id="mark-surah-btn" onclick="markSurahMemorized(this)" style="margin-top:4px;" title="Click when you can recite the full surah without help">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         <span id="mark-surah-label" data-i18n="mark_surah_btn">Mark Surah as Memorized</span>
-
       </button>
     </div>
   </div>
@@ -8217,6 +8218,17 @@ function appendAyah(index) {
 function highlightActiveAyah(index) {
   const container = document.getElementById('ayah-scroll-container');
   if (!container) return;
+  var data = audioEngine.currentSurah;
+  if (data) {
+    var bar = document.getElementById('ayah-progress-bar');
+    var lbl = document.getElementById('ayah-progress-label');
+    var fill = document.getElementById('ayah-progress-fill');
+    var ji = document.getElementById('ayah-jump-input');
+    if (bar) bar.style.display = 'flex';
+    if (lbl) lbl.textContent = 'Ayah ' + (index+1) + ' / ' + data.ayahs.length;
+    if (fill) fill.style.width = Math.round(((index+1)/data.ayahs.length)*100) + '%';
+    if (ji) ji.max = data.ayahs.length;
+  }
   var activeRow = null;
   container.querySelectorAll('.ayah-row').forEach(function(row) {
     var i = parseInt(row.getAttribute('data-index'));
